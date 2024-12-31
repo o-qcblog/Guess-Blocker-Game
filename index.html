@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Guessing Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+        .output {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            height: 100px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Number Guessing Game</h1>
+        <p id="questionLabel">Is the number ?</p>
+        <select id="responseDropdown">
+            <option value="Choose...">Choose...</option>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+        </select>
+        <br><br>
+        <button id="submitButton">Submit</button>
+        <button id="restartButton" style="background-color: red; color: white;">Restart</button>
+        <div class="output" id="output"></div>
+    </div>
+
+    <script>
+        let count = 0;
+        let start = 0;
+        let stop = 10000;
+        let guess = Math.floor(Math.random() * (stop - start + 1)) + start;
+        let question = "";
+        const output = document.getElementById('output');
+        const questionLabel = document.getElementById('questionLabel');
+        const responseDropdown = document.getElementById('responseDropdown');
+        const submitButton = document.getElementById('submitButton');
+        const restartButton = document.getElementById('restartButton');
+
+        function restartGame() {
+            count = 0;
+            start = 0;
+            stop = 10000;
+            guess = Math.floor(Math.random() * (stop - start + 1)) + start;
+            question = ["&gt;", "&lt;", "="][Math.floor(Math.random() * 3)];
+            questionLabel.innerHTML = `Is the number ${question} ${guess}?`;
+            responseDropdown.value = "Choose...";
+            output.innerHTML = "";
+        }
+
+        function processResponse() {
+            const response = responseDropdown.value;
+
+            if (response === "Choose...") {
+                output.innerHTML += "<p>Please select a valid response: Yes or No.</p>";
+                return;
+            }
+
+            count += 1;
+
+            if (question === "=" && response === "Yes") {
+                output.innerHTML += `<p>I guessed your number in ${count} steps! I'm great at this!</p>`;
+                return;
+            } else if (question === "=" && response === "No") {
+                output.innerHTML += "<p>Hmm, I seem to have made a mistake. Let me try again.</p>";
+            }
+
+            if (question === "&gt;") {
+                if (response === "Yes") {
+                    start = guess;
+                } else {
+                    stop = guess;
+                }
+            } else if (question === "&lt;") {
+                if (response === "Yes") {
+                    stop = guess;
+                } else {
+                    start = guess;
+                }
+            }
+
+            if (start > stop) {
+                output.innerHTML += "<p>It seems there's an inconsistency in your responses!</p>";
+                return;
+            }
+
+            guess = Math.floor(Math.random() * (stop - start + 1)) + start;
+            question = ["&gt;", "&lt;", "="][Math.floor(Math.random() * 3)];
+            while ((question === "&lt;" && guess === 0) || (question === "&gt;" && guess === 10000) || (question === "&gt;" && guess === 0) || (question === "&lt;" && guess === 10000)) {
+                guess = Math.floor(Math.random() * (stop - start + 1)) + start;
+                question = ["&gt;", "&lt;", "="][Math.floor(Math.random() * 3)];
+            }
+            questionLabel.innerHTML = `Is the number ${question} ${guess}?`;
+            responseDropdown.value = "Choose...";
+        }
+
+        submitButton.addEventListener('click', processResponse);
+        restartButton.addEventListener('click', restartGame);
+
+        restartGame();
+    </script>
+</body>
+</html>
