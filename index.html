@@ -105,7 +105,11 @@
                 return;
             }
 
-            guess = Math.floor(Math.random() * (stop - start + 1)) + start;
+            let previousGuess = guess;
+            do {
+                guess = Math.floor(Math.random() * (stop - start + 1)) + start;
+            } while (guess === previousGuess);
+            
             question = getQuestion();
             while ((question === "&lt;" && guess === 0) || (question === "&gt;" && guess === 10000) || (question === "&gt;" && guess === 0) || (question === "&lt;" && guess === 10000)) {
                 guess = Math.floor(Math.random() * (stop - start + 1)) + start;
