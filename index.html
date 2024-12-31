@@ -55,10 +55,18 @@
             start = 0;
             stop = 10000;
             guess = Math.floor(Math.random() * (stop - start + 1)) + start;
-            question = ["&gt;", "&lt;", "="][Math.floor(Math.random() * 3)];
+            question = getQuestion();
             questionLabel.innerHTML = `Is the number ${question} ${guess}?`;
             responseDropdown.value = "Choose...";
             output.innerHTML = "";
+        }
+
+        function getQuestion() {
+            if (stop - start <= 10) {
+                return ["&gt;", "&lt;", "="][Math.floor(Math.random() * 3)];
+            } else {
+                return ["&gt;", "&lt;"][Math.floor(Math.random() * 2)];
+            }
         }
 
         function processResponse() {
@@ -98,10 +106,10 @@
             }
 
             guess = Math.floor(Math.random() * (stop - start + 1)) + start;
-            question = ["&gt;", "&lt;", "="][Math.floor(Math.random() * 3)];
+            question = getQuestion();
             while ((question === "&lt;" && guess === 0) || (question === "&gt;" && guess === 10000) || (question === "&gt;" && guess === 0) || (question === "&lt;" && guess === 10000)) {
                 guess = Math.floor(Math.random() * (stop - start + 1)) + start;
-                question = ["&gt;", "&lt;", "="][Math.floor(Math.random() * 3)];
+                question = getQuestion();
             }
             questionLabel.innerHTML = `Is the number ${question} ${guess}?`;
             responseDropdown.value = "Choose...";
